@@ -5,6 +5,7 @@ body {
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
 }
 
 #graph-container {
@@ -15,54 +16,81 @@ body {
 
 .node {
     position: absolute;
-    width: 50px;
-    height: 50px;
+    width: 150px;
+    height: 60px;
     background-color: #4CAF50;
     color: white;
-    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
     text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
 }
 
 #root-node {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    background-color: #2196F3;
+    color: white;
 }
 
 .add-node-btn {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     border: none;
     background-color: #f1f1f1;
     cursor: pointer;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 16px;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.add-node-btn:hover {
+    background-color: #ddd;
 }
 
 .add-node-btn[data-direction="up"] {
-    top: -10px;
+    top: -12px;
     left: 50%;
-    transform: translate(-50%, -100%);
+    transform: translateX(-50%);
 }
 
 .add-node-btn[data-direction="down"] {
-    bottom: -10px;
+    bottom: -12px;
     left: 50%;
-    transform: translate(-50%, 100%);
+    transform: translateX(-50%);
 }
 
 .add-node-btn[data-direction="left"] {
-    left: -10px;
+    left: -12px;
     top: 50%;
-    transform: translate(-100%, -50%);
+    transform: translateY(-50%);
 }
 
 .add-node-btn[data-direction="right"] {
-    right: -10px;
+    right: -12px;
     top: 50%;
-    transform: translate(100%, -50%);
+    transform: translateY(-50%);
+}
+
+input[type="text"] {
+    width: 90px;
+    border: none;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-right: 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
