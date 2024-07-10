@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Node Tree</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #nodeContainer {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            border: 1px solid #ccc;
+        }
+        .node {
+            position: absolute;
+            padding: 10px;
+            border: 1px solid #000;
+            background-color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .node:hover .icon {
+            display: inline-block;
+        }
+        .icon {
+            display: none;
+            margin-left: 10px;
+            cursor: pointer;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div id="nodeContainer">
+        <div class="node" id="rootNode" style="top: 50px; left: 50px;">
+            Root Node
+            <span class="icon add" onclick="addChildNode('rootNode')">+</span>
+        </div>
+    </div>
+
+    <script>
+        let nodeIdCounter = 1;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('nodeContainer').addEventListener('click', function(event) {
+                if (event.target.classList.contains('node')) {
+                    highlightSelectedNode(event.target);
+                }
+            });
+        });
+
+        function highlightSelectedNode(node) {
+            document.querySelectorAll('.node').forEach(n => n.style.backgroundColor = '');
+            node.style.backgroundColor = 'lightblue';
+        }
+
+        function addChildNode(parentNodeId) {
+            const parentNode = document.getElementById(parentNodeId);
+            const newNode = document.createElement('div');
+            newNode.className = 'node';
+            newNode.id = `node${nodeIdCounter++}`;
+            newNode.innerHTML = `
+                Child Node
+                <span class="icon add" onclick="addChildNode('${newNode.id}')">+</span>
+            `;
+            newNode.style.top = `${parentNode.offsetTop + 100}px`;
+            newNode.style.left = `${parentNode.offsetLeft}px`;
+            document.getElementById('nodeContainer').appendChild(newNode);
+        }
+    </script>
+</body>
+</html>
