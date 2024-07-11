@@ -66,7 +66,14 @@
                 Child Node
                 <span class="icon add" onclick="addChildNode('${newNode.id}')">+</span>
             `;
-            newNode.style.top = `${parentNode.offsetTop + 100}px`;
+            
+            const siblingNodes = Array.from(parentNode.parentNode.children).filter(node => node !== parentNode);
+            let topPosition = parentNode.offsetTop + 100;
+            while (siblingNodes.some(node => node.offsetTop === topPosition && node.offsetLeft === parentNode.offsetLeft)) {
+                topPosition += 100;
+            }
+
+            newNode.style.top = `${topPosition}px`;
             newNode.style.left = `${parentNode.offsetLeft}px`;
             document.getElementById('nodeContainer').appendChild(newNode);
         }
