@@ -23,7 +23,15 @@ function redrawNodes() {
         });
     });
 }
-
+function drawRedDot(node) {
+    const centerX = node.x;
+    const centerY = node.y + nodeHeight / 2;
+    const radius = 5;
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.fill();
+}
 function drawNode(node) {
     const { x, y} = node;
     ctx.fillStyle = '#007bff';
@@ -31,15 +39,17 @@ function drawNode(node) {
     ctx.lineWidth = 2;
     ctx.fillRect(x - nodeWidth / 2, y - nodeHeight / 2, nodeWidth, nodeHeight);
     ctx.strokeRect(x - nodeWidth / 2, y - nodeHeight / 2, nodeWidth, nodeHeight);
-    
+    drawRedDot(node);   
 }
 
 function drawCurve(nodeFrom, nodeTo) {
     ctx.strokeStyle = '#333';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 5;
     ctx.beginPath();
-    ctx.moveTo(nodeFrom.x, nodeFrom.y);
-    ctx.quadraticCurveTo(nodeFrom.x, (nodeFrom.y + nodeTo.y) / 2, nodeTo.x, nodeTo.y);
+    const fromX = nodeFrom.x;
+    const fromY = nodeFrom.y + nodeHeight / 2;  
+    ctx.moveTo(fromX, fromY);
+    ctx.quadraticCurveTo(fromX, (fromY + nodeTo.y) / 2, nodeTo.x, nodeTo.y);
     ctx.stroke();
 }
 
@@ -61,7 +71,6 @@ canvas.addEventListener('mousedown', (e) => {
     const y = e.clientY;
 
     if (nodes.length === 0) {
-        // If no nodes exist, create the first node at the click position
         addNode(x, y);
         redrawNodes();
     } else {
@@ -79,10 +88,12 @@ canvas.addEventListener('mousemove', (e) => {
         redrawNodes();
 
         ctx.strokeStyle = '#333';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 5;
         ctx.beginPath();
-        ctx.moveTo(selectedNode.x, selectedNode.y);
-        ctx.quadraticCurveTo(selectedNode.x, (selectedNode.y + e.clientY) / 2, e.clientX, e.clientY);
+        const fromX = selectedNode.x;
+        const fromY = selectedNode.y + nodeHeight / 2;  
+        ctx.moveTo(fromX, fromY);
+        ctx.quadraticCurveTo(fromX, (fromY + e.clientY) / 2, e.clientX, e.clientY);
         ctx.stroke();
     }
 });
@@ -91,11 +102,8 @@ canvas.addEventListener('mouseup', (e) => {
     if (isDrawing && selectedNode) {
         const newX = e.clientX;
         const newY = e.clientY;
-
-        // Create a new node at the mouse release position
         const newNode = addNode(newX, newY);
         
-        // Connect the selected node to the new node
         selectedNode.connections.push(newNode);
 
         redrawNodes();
