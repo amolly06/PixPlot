@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Movable Nodes</title>
+</head>
+<body>
+    <input type="color" id="colorPicker" value="#ff0000">
+<input type="color" id="borderColorPicker" value="#000000">
+<input type="number" id="borderWidthPicker" value="2" min="1" max="10">
+<input type="number" id="widthPicker" value="120" min="10">
+<input type="number" id="heightPicker" value="60" min="10">
+<select id="shapePicker">
+  <option value="rectangle">Rectangle</option>
+  <option value="square">Square</option>
+  <option value="circle">Circle</option>
+  <option value="diamond">Diamond</option>
+  <option value="rhombus">Rhombus</option>
+</select>
+<input type="text" id="textPicker" placeholder="Node Text">
+<input type="range" id="opacityPicker" value="1" min="0" max="1" step="0.1">
+<input type="color" id="strokeColorPicker" value="#333333">
+<input type="number" id="strokeWidthPicker" value="2" min="1" max="10">
+<input type="color" id="fontColorPicker" value="#000000">
+<input type="number" id="fontSizePicker" value="16" min="10">
+<select id="fontStylePicker">
+  <option value="normal">Normal</option>
+  <option value="italic">Italic</option>
+  <option value="bold">Bold</option>
+</select>
+<canvas id="canvas"></canvas>
+    <script src="canva.js"></script>
+</body>
+</html>
