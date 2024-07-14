@@ -1,0 +1,199 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Canvas with Input Boxes</title>
+     <style>
+         #canvas {
+             border: 1px solid #000;
+             display: block;
+         }
+         .node-input {
+             position: absolute;
+             width: 120px;
+             height: 60px;
+             border: 2px solid #0056b3;
+             box-sizing: border-box;
+             text-align: center;
+         }
+     </style>
+ </head>
+ <body>
+     <canvas id="canvas"></canvas>
+     <script>
+         const canvas = document.getElementById('canvas');
+         const ctx = canvas.getContext('2d');
+ 
+         let isDrawing = false;
+         let nodes = [];
+         let selectedNode = null;
+         let hoveredNode = null;
+         const nodeWidth = 120;
+         const nodeHeight = 60;
+ 
+         function resizeCanvas() {
+             canvas.width = window.innerWidth;
+             canvas.height = window.innerHeight;
+             redrawNodes();
+         }
+ 
+         function redrawNodes() {
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
+             nodes.forEach(node => {
+                 updateInputBoxPosition(node);
+                 node.connections.forEach(connectedNode => {
+                     drawCurve(node, connectedNode);
+                 });
+             });
+         }
+ 
+         function updateInputBoxPosition(node) {
+             const inputBox = document.getElementById(node.id);
+             if (inputBox) {
+                 inputBox.style.left = `${node.x - nodeWidth / 2}px`;
+                 inputBox.style.top = `${node.y - nodeHeight / 2}px`;
+             }
+         }
+ 
+         function drawCurve(nodeFrom, nodeTo) {
+             ctx.strokeStyle = '#333';
+             ctx.lineWidth = 5;
+             ctx.beginPath();
+             const fromX = nodeFrom.x;
+             const fromY = nodeFrom.y + nodeHeight / 2;  
+             ctx.moveTo(fromX, fromY);
+             ctx.quadraticCurveTo(fromX, (fromY + nodeTo.y) / 2, nodeTo.x, nodeTo.y);
+             ctx.stroke();
+         }
+ 
+         function addNode(x, y) {
+             const id = `node-${nodes.length}`;
+             const newNode = {
+                 id,
+                 x,
+                 y,
+                 connections: []
+             };
+             nodes.push(newNode);
+             createInputBox(newNode);
+             return newNode;
+         }
+ 
+         function createInputBox(node) {
+             const inputBox = document.createElement('input');
+             inputBox.type = 'text';
+             inputBox.id = node.id;
+             inputBox.className = 'node-input';
+             inputBox.style.left = `${node.x - nodeWidth / 2}px`;
+             inputBox.style.top = `${node.y - nodeHeight / 2}px`;
+ 
+             inputBox.addEventListener('mousedown', (e) => {
+                 e.stopPropagation();
+                 selectedNode = node;
+                 isDrawing = true;
+             });
+                  inputBox.addEventListener('mousemove', (e) => {
+                 if (isDrawing && selectedNode) {
+                     const rect = canvas.getBoundingClientRect();
+                     const mouseX = e.clientX - rect.left;
+                     const mouseY = e.clientY - rect.top;
+                     redrawNodes();
+                     ctx.strokeStyle = '#333';
+                     ctx.lineWidth = 5;
+                     ctx.beginPath();
+                     const fromX = selectedNode.x;
+                     const fromY = selectedNode.y + nodeHeight / 2;
+                     ctx.moveTo(fromX, fromY);
+                     ctx.quadraticCurveTo(fromX, (fromY + mouseY) / 2, mouseX, mouseY);
+                     ctx.stroke();
+                 }
+             });
+ 
+             inputBox.addEventListener('mouseup', (e) => {
+                 if (isDrawing && selectedNode) {
+                     const rect = canvas.getBoundingClientRect();
+                     const newX = e.clientX - rect.left;
+                     const newY = e.clientY - rect.top;
+                     const newNode = addNode(newX, newY);
+                     selectedNode.connections.push(newNode);
+                     selectedNode = newNode;
+                     redrawNodes();
+                 }
+                 isDrawing = false;
+             });
+ 
+             document.body.appendChild(inputBox);
+         }
+ 
+         window.addEventListener('resize', resizeCanvas);
+         resizeCanvas();
+ 
+         canvas.addEventListener('mousedown', (e) => {
+             const x = e.clientX;
+             const y = e.clientY;
+ 
+             if (nodes.length === 0) {
+                 addNode(x, y);
+                 selectedNode = nodes[0];
+                 redrawNodes();
+             } else {
+                 const clickedNode = nodes.find(node => {
+                     const centerX = node.x;
+                     const centerY = node.y + nodeHeight / 2;
+                     const radius = 10;
+                     const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+                     return distance <= radius;
+                 });
+ 
+                 if (clickedNode) {
+                     selectedNode = clickedNode;
+                     isDrawing = true;
+                 }
+             }
+         });
+ 
+         canvas.addEventListener('mousemove', (e) => {
+             const x = e.clientX;
+             const y = e.clientY;
+ 
+             const foundNode = nodes.find(node => {
+                 return x >= node.x - nodeWidth / 2 && x <= node.x + nodeWidth / 2 &&
+                     y >= node.y - nodeHeight / 2 && y <= node.y + nodeHeight / 2;
+             });
+ 
+             if (foundNode) {
+                 hoveredNode = foundNode;
+             } else {
+                 hoveredNode = selectedNode;
+             }
+ 
+             redrawNodes();
+ 
+             if (isDrawing && selectedNode) {
+                 ctx.strokeStyle = '#333';
+                 ctx.lineWidth = 5;
+                 ctx.beginPath();
+                 const fromX = selectedNode.x;
+                 const fromY = selectedNode.y + nodeHeight / 2;  
+                 ctx.moveTo(fromX, fromY);
+                 ctx.quadraticCurveTo(fromX, (fromY + e.clientY) / 2, e.clientX, e.clientY);
+                 ctx.stroke();
+             }
+         });
+ 
+         canvas.addEventListener('mouseup', (e) => {
+             if (isDrawing && selectedNode) {
+                 const newX = e.clientX;
+                 const newY = e.clientY;
+                 const newNode = addNode(newX, newY);
+                 selectedNode.connections.push(newNode);
+                 selectedNode = newNode;
+                 redrawNodes();
+             }
+ 
+             isDrawing = false;
+         });
+     </script>
+ </body>
+ </html>
