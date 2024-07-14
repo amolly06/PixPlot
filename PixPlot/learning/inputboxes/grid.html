@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas with Input Boxes and Grid Background</title>
+    <style>
+        #canvas {
+            border: 1px solid #000;
+            display: block;
+        }
+        .node-input {
+            position: absolute;
+            width: 120px;
+            height: 60px;
+            border: 2px solid rgb(220, 234, 245);
+            border-radius: 30%;
+            box-sizing: border-box;
+            text-align: center;
+            background-color: rgb(220, 234, 245);
+        }
+        .red-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgb(133, 28, 175);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let isDrawing = false;
+        let nodes = [];
+        let selectedNode = null;
+        const nodeWidth = 120;
+        const nodeHeight = 60;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawGrid();
+            redrawNodes();
+        }
+
+        function drawGrid() {
+            const gridSize = 20;
+            ctx.strokeStyle = "#e0e0e0";
+            ctx.lineWidth = 0.5;
+
+            for (let x = 0; x <= canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y <= canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function redrawNodes() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+            nodes.forEach(node => {
+                updateInputBoxPosition(node);
+                updateRedDotPosition(node);
+                node.connections.forEach(connectedNode => {
+                    drawCurve(node, connectedNode);
+                });
+            });
+        }
+
+        function updateInputBoxPosition(node) {
+            const inputBox = document.getElementById(node.id);
+            if (inputBox) {
+                inputBox.style.left = `${node.x - nodeWidth / 2}px`;
+                inputBox.style.top = `${node.y - nodeHeight / 2}px`;
+            }
+        }
+
+        function updateRedDotPosition(node) {
+            const redDot = document.getElementById(`red-dot-${node.id}`);
+            if (redDot) {
+                redDot.style.left = `${node.x - 10}px`;
+                redDot.style.top = `${node.y + nodeHeight / 2 - 10}px`;
+            }
+        }
+
+        function drawCurve(nodeFrom, nodeTo) {
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            const fromX = nodeFrom.x - 8;
+            const fromY = nodeFrom.y + nodeHeight / 2 - 5;  
+            ctx.moveTo(fromX, fromY);
+            ctx.quadraticCurveTo(fromX, (fromY + nodeTo.y) / 2, nodeTo.x, nodeTo.y);
+            ctx.stroke();
+        }
+
+        function addNode(x, y) {
+            const id = `node-${nodes.length}`;
+            const newNode = {
+                id,
+                x,
+                y,
+                connections: []
+            };
+            nodes.push(newNode);
+            createInputBox(newNode);
+            createRedDot(newNode);
+            return newNode;
+        }
+
+        function createInputBox(node) {
+            const inputBox = document.createElement('input');
+            inputBox.type = 'text';
+            inputBox.id = node.id;
+            inputBox.className = 'node-input';
+            inputBox.style.left = `${node.x - nodeWidth / 2 }px`;
+            inputBox.style.top = `${node.y - nodeHeight / 2}px`;
+            document.body.appendChild(inputBox);
+        }
+
+        function createRedDot(node) {
+            const redDot = document.createElement('div');
+            redDot.id = `red-dot-${node.id}`;
+            redDot.className = 'red-dot';
+            redDot.style.left = `${node.x - 10}px`;
+            redDot.style.top = `${node.y + nodeHeight / 2 - 10}px`;
+
+            redDot.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                selectedNode = node;
+                isDrawing = true;
+            });
+            document.body.appendChild(redDot);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        canvas.addEventListener('mousedown', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+
+            if (nodes.length === 0) {
+                addNode(x, y);
+                redrawNodes();
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            if (isDrawing && selectedNode) {
+                redrawNodes();
+                ctx.strokeStyle = '#7d7cbd';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                const fromX = selectedNode.x - 8;
+                const fromY = selectedNode.y + nodeHeight / 2 - 5;
+                ctx.moveTo(fromX, fromY);
+                ctx.quadraticCurveTo(fromX, (fromY + y) / 2, x, y);
+                ctx.stroke();
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (isDrawing && selectedNode) {
+                const rect = canvas.getBoundingClientRect();
+                const newX = e.clientX - rect.left;
+                const newY = e.clientY - rect.top;
+                const newNode = addNode(newX, newY);
+                selectedNode.connections.push(newNode);
+                selectedNode = null;
+                redrawNodes();
+            }
+
+            isDrawing = false;
+        });
+    </script>
+</body>
+</html>
+
