@@ -49,6 +49,8 @@ INSTALLED_APPS = [
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = ['127.0.0.1']
 
+NPM_BIN_PATH = '/home/amollychoudhary/.nvm/versions/node/v20.5.1/bin/npm'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

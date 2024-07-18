@@ -18,17 +18,6 @@ Including another URLconf
 # PixPlotWeb/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from Users import views as user_views
-from Folders import views as folder_views
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', folder_views.intro, name='intro'),
-    path('login/', user_views.login_view, name='login'),
-    path('register/', user_views.register_view, name='register'),
-    path('home/', folder_views.home, name='home'),
-    path('about/', folder_views.about, name='about'),
-    path('folders/', include('Folders.urls')),  # This line includes the Folders app URLs
-]
 
 
