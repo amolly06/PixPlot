@@ -1,15 +1,25 @@
-{% load static tailwind_tags %}
 {% load static %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixPlot</title>
+    <title>Introduction</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% tailwind_css %}
 </head>
 <body>
-    <h1>Welcome to PixPlot</h1>
+    <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <h1 class="text-3xl font-extrabold text-gray-900">Welcome to the Intro Page</h1>
+            <p class="mt-2 text-center text-lg text-gray-600">Explore our features and get started by logging in.</p>
+            <div class="mt-6">
+                <a href="{% url 'account_login' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

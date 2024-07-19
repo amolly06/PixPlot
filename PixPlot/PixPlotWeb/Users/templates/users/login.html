@@ -6,10 +6,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
     {% tailwind_css %}
 </head>
-<body>
-    <h1>Login Here</h1>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-semibold mb-6 text-center">Login</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" name="username" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" name="password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 sm:text-sm" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Login</button>
+        </form>
+        <p class="mt-4 text-center text-sm text-gray-600">Don't have an account? <a href="{% url 'account_register' %}" class="text-blue-500 hover:text-blue-700">Create an account</a>.</p>
+    </div>
 </body>
 </html>
