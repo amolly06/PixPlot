@@ -18,6 +18,18 @@ Including another URLconf
 # PixPlotWeb/urls.py
 from django.contrib import admin
 from django.urls import path, include
+from . import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.intro, name='intro'),
+    path('about/', views.about, name='about'),
+    path('users/', include('Users.urls')),
+    path('folder/', include('Folders.urls')),
+
+
+    path("__reload__/", include("django_browser_reload.urls")),
+]
 
 
 

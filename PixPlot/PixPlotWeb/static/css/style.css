@@ -1,0 +1,14 @@
+body{
+    background-color: aqua;
+    padding: 0;
+    margin: 0;
+}
+
+h1{
+    text-align: center;
+}
+
+nav, footer{
+    background-color: brown;
+    color:aliceblue;
+}
