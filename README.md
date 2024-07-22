@@ -35,3 +35,4 @@ Tools and Technologies :
 1. HTML
 2. CSS
 3. JavaScript (Canvas API)
+4. Django FrameWork
