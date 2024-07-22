@@ -1,6 +1,6 @@
 {% load static %}
 {% load static tailwind_tags %}
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,5 +21,180 @@
             </div>
         </div>
     </div>
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixPlot</title>
+    {% comment %} <link rel="stylesheet" href="{% static 'css/style.css' %}"> {% endcomment %}
+    {% tailwind_css %}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: url('your-background-image.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            overflow: hidden;
+        }
+        .navbar {
+            background: linear-gradient(135deg, rgba(90, 87, 170, 0.724), rgba(105, 91, 175, 0.6));
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* padding: 80px 20px 30px; Adjusted padding for sticky navbar */
+            text-align: center;
+            position: relative;
+            flex-direction: row;
+        }
+        .intro-content {
+            /* background: rgba(255, 255, 255, 0.8); */
+            border-radius: 15px;
+            /* padding: 40px; */
+            /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); */
+            transform: perspective(1000px) rotateX(5deg) rotateY(2deg);
+            transition: transform 0.3s ease;
+            max-width: 800px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .intro-content:hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+        }
+        .intro-text {
+            flex: 1;
+            margin-right: 20px;
+            text-align: left;
+        }
+        
+        h1 {
+            margin-top: 0;
+            font-size: 3em;
+            color: #4d6583;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        p {
+            font-size: 1.5em;
+            margin: 20px 0;
+            line-height: 1.4;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #4d6583;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn:hover {
+            background-color: #357abd;
+            transform: scale(1.05);
+        }
+        .footer {
+            background: linear-gradient(135deg, rgba(31, 32, 82, 0.8), rgba(16, 7, 46, 0.273));
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Artistic Background and Animations */
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('your-artistic-background.jpg') repeat;
+            animation: moveBackground 30s linear infinite;
+            z-index: -1;
+        }
+        @keyframes moveBackground {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; }
+        }
+        .parallax {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            background: url('your-3d-element.png') no-repeat center center;
+            background-size: contain;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-links">
+            <a href="{% url 'account_login' %}">Login</a>
+            <a href="{% url 'account_register' %}">Signup</a>
+            <a href="{% url 'about' %}">About Us</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="intro-content">
+            <div class="intro-text">
+                <h1>Welcome to PixPlot</h1>
+                <p>Your interactive canvas for visualizing and managing nodes with dynamic features. Explore, create, and innovate with ease.</p>
+                <a href="{% url 'account_login' %}" class="btn">Get Started</a>
+            </div>
+            <img src="planning-concept-people-scene-flat-260nw-2321277233.webp" alt="PixPlot Introduction Image" class="intro-image">
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 PixPlot. All rights reserved.</p>
+        <p>Email: support@pixplot.com | Phone: +1 (123) 456-7890</p>
+    </div>
+    <div class="animated-background"></div>
+    <div class="parallax" id="parallax"></div>
+
+    <script>
+        // JavaScript to move the 3D element
+        document.addEventListener('mousemove', (e) => {
+            const parallax = document.getElementById('parallax');
+            const x = e.clientX / window.innerWidth - 0.5;
+            const y = e.clientY / window.innerHeight - 0.5;
+            parallax.style.transform = translate(-50%, -50%) translate3d(${x * 30}px, ${y * 30}px, 0);
+        });
+    </script>
 </body>
 </html>

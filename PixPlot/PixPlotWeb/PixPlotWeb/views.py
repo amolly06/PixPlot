@@ -8,3 +8,6 @@ def intro(request):
 def about(request):
     return render(request, 'about.html')
 
+def mindmap(request):
+    return render(request, 'canvas.html')
+
