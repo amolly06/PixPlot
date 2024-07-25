@@ -8,6 +8,7 @@ const nodeWidth = 150;
 const nodeHeight = 90;
 let zoomLevel = 1;
 const zoomFactor = 0.1;
+
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -17,7 +18,7 @@ function resizeCanvas() {
 
 function drawGrid() {
     const gridSize = 14;
-    ctx.strokeStyle = "#FFFDD0";
+    ctx.strokeStyle = "#e0e0e0";
     ctx.lineWidth = 0.5;
 
     for (let x = 0; x <= canvas.width; x += gridSize) {
@@ -36,6 +37,8 @@ function drawGrid() {
 
 function redrawNodes() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
     drawGrid();
     nodes.forEach(node => {
         updateInputBoxPosition(node);
@@ -44,34 +47,34 @@ function redrawNodes() {
             drawCurve(node, connectedNode);
         });
     });
+    ctx.restore();
 }
 
 function updateInputBoxPosition(node) {
     const inputBox = document.getElementById(node.id);
     if (inputBox) {
-        inputBox.style.left = `${node.x - node.width / 2}px`;
-        inputBox.style.top = `${node.y - node.height / 2}px`;
+        inputBox.style.left = `${(node.x - node.width / 2) * zoomLevel}px`;
+        inputBox.style.top = `${(node.y - node.height / 2) * zoomLevel}px`;
+        inputBox.style.width = `${node.width * zoomLevel}px`;
+        inputBox.style.height = `${node.height * zoomLevel}px`;
         inputBox.style.backgroundColor = node.color;
         inputBox.style.fontFamily = node.fontStyle;
-        inputBox.style.fontSize = `${node.fontSize}px`;
+        inputBox.style.fontSize = `${node.fontSize * zoomLevel}px`;
         inputBox.style.color = node.fontColor;
-        inputBox.style.width = `${node.width}px`;
-        inputBox.style.height = `${node.height}px`;
         inputBox.style.opacity = node.opacity;
-        inputBox.style.boxShadow = `${node.shadowOffsetX}px ${node.shadowOffsetY}px ${node.shadowBlur}px ${node.shadowColor}`; // Update shadow
+        inputBox.style.boxShadow = `${node.shadowOffsetX * zoomLevel}px ${node.shadowOffsetY * zoomLevel}px ${node.shadowBlur * zoomLevel}px ${node.shadowColor}`;
         inputBox.style.borderStyle = node.borderStyle;
         inputBox.style.borderColor = node.borderColor;
         inputBox.style.textDecoration = node.textDecoration;
-        inputBox.style.borderRadius = `${node.cornerRadius}px`;
-        inputBox.style.transform = `rotate(${node.rotation}deg)`;
+        inputBox.style.borderRadius = `${node.cornerRadius * zoomLevel}px`;
     }
 }
 
 function updateRedDotPosition(node) {
     const redDot = document.getElementById(`red-dot-${node.id}`);
     if (redDot) {
-        redDot.style.left = `${node.x - 10}px`;
-        redDot.style.top = `${node.y + nodeHeight / 2 - 10}px`;
+        redDot.style.left = `${(node.x + 2) * zoomLevel}px`;
+        redDot.style.top = `${(node.y + nodeHeight / 2 ) * zoomLevel}px`;
     }
 }
 
@@ -87,7 +90,7 @@ function drawCurve(nodeFrom, nodeTo) {
     ctx.strokeStyle = '#333';
     ctx.lineWidth = 5;
     ctx.beginPath();
-    const fromX = nodeFrom.x + 8;
+    const fromX = nodeFrom.x + 15;
     const fromY = nodeFrom.y + nodeHeight / 2 - 5;
     ctx.moveTo(fromX, fromY);
     ctx.quadraticCurveTo(fromX, (fromY + nodeTo.y) / 2, nodeTo.x, nodeTo.y);
@@ -131,8 +134,7 @@ function createInputBox(node) {
 
     const textInput = document.createElement('input');
     textInput.type = 'text';
-    textInput.placeholder = 'Enter text';
-    textInput.style.width = '100%';
+    textInput.style.width = '90%';
 
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -157,20 +159,7 @@ function createInputBox(node) {
     inputBox.appendChild(changeButton);
     inputBox.appendChild(deleteButton);
 
-    inputBox.style.left = `${node.x - node.width / 2}px`;
-    inputBox.style.top = `${node.y - node.height / 2}px`;
-    inputBox.style.backgroundColor = node.color;
-    inputBox.style.fontFamily = node.fontStyle;
-    inputBox.style.fontSize = `${node.fontSize}px`;
-    inputBox.style.color = node.fontColor;
-    inputBox.style.width = `${node.width}px`;
-    inputBox.style.height = `${node.height}px`;
-    inputBox.style.opacity = node.opacity;
-    inputBox.style.boxShadow = `${node.shadowOffsetX}px ${node.shadowOffsetY}px ${node.shadowBlur}px ${node.shadowColor}`;
-    inputBox.style.borderStyle = node.borderStyle;
-    inputBox.style.borderColor = node.borderColor;
-    inputBox.style.textDecoration = node.textDecoration;
-    inputBox.style.borderRadius = `${node.cornerRadius}px`;
+    updateInputBoxPosition(node);
 
     document.body.appendChild(inputBox);
 }
@@ -201,8 +190,7 @@ function createRedDot(node) {
     const redDot = document.createElement('div');
     redDot.id = `red-dot-${node.id}`;
     redDot.className = 'red-dot';
-    redDot.style.left = `${node.x - 10}px`;
-    redDot.style.top = `${node.y + nodeHeight / 2 - 10}px`;
+    updateRedDotPosition(node);
 
     redDot.addEventListener('mousedown', (e) => {
         e.stopPropagation();
@@ -232,25 +220,27 @@ canvas.addEventListener('mousemove', (e) => {
 
     if (isDrawing && selectedNode) {
         redrawNodes();
+        ctx.save();
+        ctx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
         ctx.strokeStyle = '#7d7cbd';
         ctx.lineWidth = 5;
         ctx.beginPath();
-        const fromX = selectedNode.x + 8;
+        const fromX = selectedNode.x + 15;
         const fromY = selectedNode.y + nodeHeight / 2 - 5;
         ctx.moveTo(fromX, fromY);
         ctx.quadraticCurveTo(fromX, (fromY + y) / 2, x, y);
         ctx.stroke();
+        ctx.restore();
     }
 });
+
 function zoomIn() {
     zoomLevel = Math.min(zoomLevel + zoomFactor, 5);
-    ctx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
     redrawNodes();
 }
 
 function zoomOut() {
     zoomLevel = Math.max(zoomLevel - zoomFactor, 0.1);
-    ctx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
     redrawNodes();
 }
 
@@ -267,6 +257,7 @@ window.addEventListener('keydown', (e) => {
         zoomOut();
     }
 });
+
 canvas.addEventListener('mouseup', (e) => {
     if (isDrawing && selectedNode) {
         const rect = canvas.getBoundingClientRect();
@@ -280,6 +271,7 @@ canvas.addEventListener('mouseup', (e) => {
 
     isDrawing = false;
 });
+
 document.getElementById('box-color').addEventListener('input', (e) => {
     if (selectedNode) {
         selectedNode.color = e.target.value;
@@ -387,8 +379,32 @@ function saveCanvas() {
 
     tempCtx.fillStyle = '#ffffff'; 
     tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-
     tempCtx.drawImage(canvas, 0, 0);
+    tempCtx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
+    nodes.forEach(node => {
+
+        tempCtx.fillStyle = node.color;
+        tempCtx.fillRect(node.x - node.width / 2, node.y - node.height / 2, node.width, node.height);
+        
+        tempCtx.strokeStyle = node.borderColor;
+        tempCtx.lineWidth = 2; 
+        tempCtx.strokeRect(node.x - node.width / 2, node.y - node.height / 2, node.width, node.height);
+        const inputBox = document.getElementById(node.id);
+        const textInput = inputBox.querySelector('input[type="text"]');
+        if (textInput) {
+            tempCtx.font = `${node.fontSize}px ${node.fontStyle}`;
+            tempCtx.fillStyle = node.fontColor;
+            tempCtx.textAlign = 'center';
+            tempCtx.textBaseline = 'middle';
+            tempCtx.fillText(textInput.value, node.x, node.y);
+        }
+        const preview = inputBox.querySelector('.preview');
+        if (preview && preview.src) {
+            const image = new Image();
+            image.src = preview.src;
+            tempCtx.drawImage(image, node.x - node.width / 2, node.y - node.height / 2, node.width, node.height);
+        }
+    });
 
     const link = document.createElement('a');
     link.download = 'canvas-image.png';
