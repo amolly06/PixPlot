@@ -21,22 +21,22 @@ function drawGrid() {
     ctx.strokeStyle = "#e0e0e0";
     ctx.lineWidth = 0.5;
 
-    for (let x = 0; x <= canvas.width; x += gridSize) {
+    for (let x = 0; x <= 6*canvas.width; x += gridSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
+        ctx.lineTo(x, 6*canvas.height);
         ctx.stroke();
     }
-    for (let y = 0; y <= canvas.height; y += gridSize) {
+    for (let y = 0; y <= 6*canvas.height; y += gridSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
+        ctx.lineTo(6*canvas.width, y);
         ctx.stroke();
     }
 }
 
 function redrawNodes() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, 6*canvas.width, canvas.height);
     ctx.save();
     ctx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
     drawGrid();
@@ -402,7 +402,7 @@ function saveCanvas() {
         if (preview && preview.src) {
             const image = new Image();
             image.src = preview.src;
-            tempCtx.drawImage(image, node.x - node.width / 2, node.y - node.height / 2, node.width, node.height);
+            tempCtx.drawImage(image, node.x - node.width / 2 , node.y - node.height / 2 + 45, node.width, node.height);
         }
     });
 
