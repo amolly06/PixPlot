@@ -4,8 +4,13 @@ const ctx = canvas.getContext('2d');
 let isDrawing = false;
 let nodes = [];
 let selectedNode = null;
+<<<<<<< HEAD
 const nodeWidth = 150;
 const nodeHeight = 90;
+=======
+const nodeWidth = 120;
+const nodeHeight = 60;
+>>>>>>> 78f2de25fdb17a4ec5c06560de30537a8bc9c126
 let zoomLevel = 1;
 const zoomFactor = 0.1;
 function resizeCanvas() {
@@ -35,6 +40,7 @@ function drawGrid() {
 }
 
 function redrawNodes() {
+<<<<<<< HEAD
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
     nodes.forEach(node => {
@@ -65,6 +71,38 @@ function updateInputBoxPosition(node) {
         inputBox.style.borderRadius = `${node.cornerRadius}px`;
         inputBox.style.transform = `rotate(${node.rotation}deg)`;
     }
+=======
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+drawGrid();
+nodes.forEach(node => {
+updateInputBoxPosition(node);
+updateRedDotPosition(node);
+node.connections.forEach(connectedNode => {
+    drawCurve(node, connectedNode);
+});
+});
+}
+
+function updateInputBoxPosition(node) {
+const inputBox = document.getElementById(node.id);
+if (inputBox) {
+inputBox.style.left = `${node.x - node.width / 2}px`;
+inputBox.style.top = `${node.y - node.height / 2}px`;
+inputBox.style.backgroundColor = node.color;
+inputBox.style.fontFamily = node.fontStyle;
+inputBox.style.fontSize = `${node.fontSize}px`;
+inputBox.style.color = node.fontColor;
+inputBox.style.width = `${node.width}px`;
+inputBox.style.height = `${node.height}px`;
+inputBox.style.opacity = node.opacity;
+inputBox.style.boxShadow = `${node.shadowOffsetX}px ${node.shadowOffsetY}px ${node.shadowBlur}px ${node.shadowColor}`; // Update shadow
+inputBox.style.borderStyle = node.borderStyle;
+inputBox.style.borderColor = node.borderColor;
+inputBox.style.textDecoration = node.textDecoration;
+inputBox.style.borderRadius = `${node.cornerRadius}px`;
+inputBox.style.transform = `rotate(${node.rotation}deg)`;
+}
+>>>>>>> 78f2de25fdb17a4ec5c06560de30537a8bc9c126
 }
 
 function updateRedDotPosition(node) {
@@ -76,6 +114,7 @@ function updateRedDotPosition(node) {
 }
 
 function drawCurve(nodeFrom, nodeTo) {
+<<<<<<< HEAD
     const lineStyle = document.getElementById('line-style').value;
     if (lineStyle === 'dashed') {
         ctx.setLineDash([10, 10]);
@@ -195,6 +234,76 @@ function handleDelete(nodeId) {
     const preview = inputBox.querySelector('.preview');
     preview.src = '';
     preview.style.display = 'none';
+=======
+const lineStyle = document.getElementById('line-style').value;
+if (lineStyle === 'dashed') {
+ctx.setLineDash([10, 10]);
+} else if (lineStyle === 'dotted') {
+ctx.setLineDash([2, 2]);
+} else {
+ctx.setLineDash([]);
+}
+ctx.strokeStyle = '#333';
+ctx.lineWidth = 5;
+ctx.beginPath();
+const fromX = nodeFrom.x + 8;
+const fromY = nodeFrom.y + nodeHeight / 2 - 5;
+ctx.moveTo(fromX, fromY);
+ctx.quadraticCurveTo(fromX, (fromY + nodeTo.y) / 2, nodeTo.x, nodeTo.y);
+ctx.stroke();
+}
+
+function addNode(x, y) {
+const id = `node-${nodes.length}`;
+const newNode = {
+id,
+x,
+y,
+color: document.getElementById('box-color').value,
+fontStyle: document.getElementById('font-style').value,
+fontSize: document.getElementById('font-size').value,
+fontColor: document.getElementById('font-color').value,
+width: document.getElementById('node-width').value,
+height: document.getElementById('node-height').value,
+opacity: document.getElementById('opacity').value / 100,
+shadowColor: document.getElementById('shadow-color').value, 
+shadowOffsetX: document.getElementById('shadow-offset-x').value,
+shadowOffsetY: document.getElementById('shadow-offset-y').value, 
+shadowBlur: document.getElementById('shadow-blur').value, 
+borderStyle: document.getElementById('border-style').value,
+borderColor: document.getElementById('border-color').value,
+textDecoration: document.getElementById('text-decoration').value,
+cornerRadius: document.getElementById('corner-radius').value,
+rotation: 0,
+connections: []
+};
+nodes.push(newNode);
+createInputBox(newNode);
+createRedDot(newNode);
+return newNode;
+}
+
+function createInputBox(node) {
+const inputBox = document.createElement('input');
+inputBox.type = 'text';
+inputBox.id = node.id;
+inputBox.className = 'node-input';
+inputBox.style.left = `${node.x - node.width / 2}px`;
+inputBox.style.top = `${node.y - node.height / 2}px`;
+inputBox.style.backgroundColor = node.color;
+inputBox.style.fontFamily = node.fontStyle;
+inputBox.style.fontSize = `${node.fontSize}px`;
+inputBox.style.color = node.fontColor;
+inputBox.style.width = `${node.width}px`;
+inputBox.style.height = `${node.height}px`;
+inputBox.style.opacity = node.opacity;
+inputBox.style.boxShadow = `${node.shadowOffsetX}px ${node.shadowOffsetY}px ${node.shadowBlur}px ${node.shadowColor}`; // Set shadow
+inputBox.style.borderStyle = node.borderStyle;
+inputBox.style.borderColor = node.borderColor;
+inputBox.style.textDecoration = node.textDecoration;
+inputBox.style.borderRadius = `${node.cornerRadius}px`;
+document.body.appendChild(inputBox);
+>>>>>>> 78f2de25fdb17a4ec5c06560de30537a8bc9c126
 }
 
 function createRedDot(node) {
@@ -281,6 +390,7 @@ canvas.addEventListener('mouseup', (e) => {
     isDrawing = false;
 });
 document.getElementById('box-color').addEventListener('input', (e) => {
+<<<<<<< HEAD
     if (selectedNode) {
         selectedNode.color = e.target.value;
         redrawNodes();
@@ -406,3 +516,105 @@ function createSaveButton() {
 }
 
 createSaveButton();
+=======
+if (selectedNode) {
+selectedNode.color = e.target.value;
+redrawNodes();
+}
+});
+document.getElementById('font-style').addEventListener('change', (e) => {
+if (selectedNode) {
+selectedNode.fontStyle = e.target.value;
+redrawNodes();
+}
+});
+document.getElementById('font-size').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.fontSize = e.target.value;
+redrawNodes();
+}
+});
+
+document.getElementById('font-color').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.fontColor = e.target.value;
+redrawNodes();
+}
+});
+document.getElementById('node-width').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.width = e.target.value;
+redrawNodes();
+}
+});
+
+document.getElementById('node-height').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.height = e.target.value;
+redrawNodes();
+}
+});
+
+document.getElementById('opacity').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.opacity = e.target.value / 100;
+redrawNodes();
+}
+});
+document.getElementById('border-style').addEventListener('change', (e) => {
+if (selectedNode) {
+selectedNode.borderStyle = e.target.value;
+redrawNodes();
+}
+});
+document.getElementById('border-color').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.borderColor = e.target.value;
+redrawNodes();
+}
+});
+
+document.getElementById('text-decoration').addEventListener('change', (e) => {
+if (selectedNode) {
+selectedNode.textDecoration = e.target.value;
+redrawNodes();
+}
+});
+
+document.getElementById('corner-radius').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.cornerRadius = e.target.value;
+redrawNodes();
+}
+});
+document.getElementById('shadow-color').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.shadowColor = e.target.value;
+redrawNodes();
+}
+});
+
+document.getElementById('shadow-offset-x').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.shadowOffsetX = e.target.value;
+redrawNodes();
+}
+});
+
+document.getElementById('shadow-offset-y').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.shadowOffsetY = e.target.value;
+redrawNodes();
+}
+});
+
+document.getElementById('shadow-blur').addEventListener('input', (e) => {
+if (selectedNode) {
+selectedNode.shadowBlur = e.target.value;
+redrawNodes();
+}
+});
+
+
+
+>>>>>>> 78f2de25fdb17a4ec5c06560de30537a8bc9c126
