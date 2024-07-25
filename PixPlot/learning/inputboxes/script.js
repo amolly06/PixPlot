@@ -18,7 +18,7 @@ function resizeCanvas() {
 
 function drawGrid() {
     const gridSize = 14;
-    ctx.strokeStyle = "#FFFDD0";
+    ctx.strokeStyle = "#e0e0e0";
     ctx.lineWidth = 0.5;
 
     for (let x = 0; x <= canvas.width; x += gridSize) {
@@ -73,8 +73,8 @@ function updateInputBoxPosition(node) {
 function updateRedDotPosition(node) {
     const redDot = document.getElementById(`red-dot-${node.id}`);
     if (redDot) {
-        redDot.style.left = `${(node.x - 10) * zoomLevel}px`;
-        redDot.style.top = `${(node.y + nodeHeight / 2 - 10) * zoomLevel}px`;
+        redDot.style.left = `${(node.x + 2) * zoomLevel}px`;
+        redDot.style.top = `${(node.y + nodeHeight / 2 ) * zoomLevel}px`;
     }
 }
 
@@ -90,7 +90,7 @@ function drawCurve(nodeFrom, nodeTo) {
     ctx.strokeStyle = '#333';
     ctx.lineWidth = 5;
     ctx.beginPath();
-    const fromX = nodeFrom.x + 8;
+    const fromX = nodeFrom.x + 15;
     const fromY = nodeFrom.y + nodeHeight / 2 - 5;
     ctx.moveTo(fromX, fromY);
     ctx.quadraticCurveTo(fromX, (fromY + nodeTo.y) / 2, nodeTo.x, nodeTo.y);
@@ -134,8 +134,7 @@ function createInputBox(node) {
 
     const textInput = document.createElement('input');
     textInput.type = 'text';
-    textInput.placeholder = 'Enter text';
-    textInput.style.width = '100%';
+    textInput.style.width = '90%';
 
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -226,7 +225,7 @@ canvas.addEventListener('mousemove', (e) => {
         ctx.strokeStyle = '#7d7cbd';
         ctx.lineWidth = 5;
         ctx.beginPath();
-        const fromX = selectedNode.x + 8;
+        const fromX = selectedNode.x + 15;
         const fromY = selectedNode.y + nodeHeight / 2 - 5;
         ctx.moveTo(fromX, fromY);
         ctx.quadraticCurveTo(fromX, (fromY + y) / 2, x, y);
@@ -380,8 +379,32 @@ function saveCanvas() {
 
     tempCtx.fillStyle = '#ffffff'; 
     tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-
     tempCtx.drawImage(canvas, 0, 0);
+    tempCtx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
+    nodes.forEach(node => {
+
+        tempCtx.fillStyle = node.color;
+        tempCtx.fillRect(node.x - node.width / 2, node.y - node.height / 2, node.width, node.height);
+        
+        tempCtx.strokeStyle = node.borderColor;
+        tempCtx.lineWidth = 2; 
+        tempCtx.strokeRect(node.x - node.width / 2, node.y - node.height / 2, node.width, node.height);
+        const inputBox = document.getElementById(node.id);
+        const textInput = inputBox.querySelector('input[type="text"]');
+        if (textInput) {
+            tempCtx.font = `${node.fontSize}px ${node.fontStyle}`;
+            tempCtx.fillStyle = node.fontColor;
+            tempCtx.textAlign = 'center';
+            tempCtx.textBaseline = 'middle';
+            tempCtx.fillText(textInput.value, node.x, node.y);
+        }
+        const preview = inputBox.querySelector('.preview');
+        if (preview && preview.src) {
+            const image = new Image();
+            image.src = preview.src;
+            tempCtx.drawImage(image, node.x - node.width / 2, node.y - node.height / 2, node.width, node.height);
+        }
+    });
 
     const link = document.createElement('a');
     link.download = 'canvas-image.png';
