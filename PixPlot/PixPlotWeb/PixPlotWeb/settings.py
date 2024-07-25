@@ -39,10 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tailwind',
+    'app',
     'theme1',
     'crispy_forms',
     'crispy_tailwind',
+    'rest_framework',
     'django_browser_reload',
+
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"

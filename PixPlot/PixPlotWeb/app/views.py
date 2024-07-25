@@ -3,9 +3,30 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-
-
 from .forms import CreateUserForm
+
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .models import Node, Canvas
+from .serializers import NodeSerializer, CanvasSerializer
+
+class NodeViewSet(viewsets.ModelViewSet):
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Node.objects.filter(user=user)
+
+class CanvasViewSet(viewsets.ModelViewSet):
+    queryset = Canvas.objects.all()
+    serializer_class = CanvasSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Canvas.objects.filter(user=user)
 
 def intro(request):
     return render(request, 'intro.html')
@@ -59,3 +80,48 @@ def main(request):
 
 def about(request):
     return render(request, 'about.html')
+
+@login_required
+def load_canvas(request):
+    # Load the Canvas and Node data for the current user
+    canvas = Canvas.objects.filter(user=request.user).first()
+    nodes = Node.objects.filter(user=request.user)
+    
+    context = {
+        'canvas_data': canvas.canvas_data if canvas else '{}',  # Provide default empty data
+        'nodes': list(nodes.values('x', 'y', 'width', 'height', 'color', 'font_size', 'font_style', 'text', 'border_color'))
+    }
+    return render(request, 'canvas.html', context)  # Render with context for the canvas and nodes
+
+
+def save_canvas(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        canvas_data = data.get('canvas_data', '{}')
+        nodes_data = data.get('nodes', [])
+
+        # Update or create Canvas record for the current user
+        canvas, created = Canvas.objects.update_or_create(
+            user=request.user,
+            defaults={'canvas_data': canvas_data}
+        )
+
+        # Update or create Node records
+        for node_data in nodes_data:
+            Node.objects.update_or_create(
+                user=request.user,
+                x=node_data['x'],
+                y=node_data['y'],
+                defaults={
+                    'width': node_data['width'],
+                    'height': node_data['height'],
+                    'color': node_data['color'],
+                    'font_size': node_data['font_size'],
+                    'font_style': node_data['font_style'],
+                    'text': node_data['text'],
+                    'border_color': node_data['border_color']
+                }
+            )
+
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)

@@ -406,3 +406,134 @@ function createSaveButton() {
 }
 
 createSaveButton();
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    const saveButton = document.getElementById('saveButton');
+    const loadButton = document.getElementById('loadButton');
+
+    // Set up your canvas dimensions if not set in HTML
+    canvas.width = 800; // example width
+    canvas.height = 600; // example height
+
+    // Fetch the canvas data from the server
+    async function loadCanvas() {
+        try {
+            const response = await fetch('/api/canvas/', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming token-based authentication
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to load canvas data.');
+            }
+
+            const data = await response.json();
+            if (data.canvas_data) {
+                applyCanvasData(data.canvas_data);
+            }
+        } catch (error) {
+            console.error('Error loading canvas:', error);
+        }
+    }
+
+    // Save the current canvas state to the server
+    async function saveCanvas() {
+        const canvasData = JSON.stringify(collectCanvasData());
+
+        try {
+            const response = await fetch('/api/canvas/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming token-based authentication
+                },
+                body: JSON.stringify({ canvas_data: canvasData })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save canvas data.');
+            }
+
+            console.log('Canvas saved successfully!');
+        } catch (error) {
+            console.error('Error saving canvas:', error);
+        }
+    }
+
+    // Collect canvas data (nodes, positions, etc.)
+    function collectCanvasData() {
+        const nodes = []; // Collect nodes and their properties
+
+        // Example node data collection (customize as needed)
+        document.querySelectorAll('.node').forEach(nodeElement => {
+            const node = {
+                x: nodeElement.offsetLeft,
+                y: nodeElement.offsetTop,
+                width: nodeElement.offsetWidth,
+                height: nodeElement.offsetHeight,
+                color: nodeElement.style.backgroundColor,
+                fontSize: parseInt(window.getComputedStyle(nodeElement).fontSize),
+                fontStyle: window.getComputedStyle(nodeElement).fontFamily,
+                text: nodeElement.textContent,
+                borderColor: window.getComputedStyle(nodeElement).borderColor
+            };
+            nodes.push(node);
+        });
+
+        return {
+            nodes: nodes
+        };
+    }
+
+    // Apply canvas data (nodes, positions, etc.)
+    function applyCanvasData(canvasData) {
+        const data = JSON.parse(canvasData);
+        
+        // Example node data application (customize as needed)
+        data.nodes.forEach(node => {
+            const nodeElement = document.createElement('div');
+            nodeElement.className = 'node';
+            nodeElement.style.position = 'absolute';
+            nodeElement.style.left = `${node.x}px`;
+            nodeElement.style.top = `${node.y}px`;
+            nodeElement.style.width = `${node.width}px`;
+            nodeElement.style.height = `${node.height}px`;
+            nodeElement.style.backgroundColor = node.color;
+            nodeElement.style.fontSize = `${node.fontSize}px`;
+            nodeElement.style.fontFamily = node.fontStyle;
+            nodeElement.style.border = `1px solid ${node.borderColor}`;
+            nodeElement.textContent = node.text;
+
+            canvas.appendChild(nodeElement);
+        });
+    }
+
+    // Event listeners for save and load buttons
+    saveButton.addEventListener('click', saveCanvas);
+    loadButton.addEventListener('click', loadCanvas);
+
+    // Load canvas data when the page loads
+    loadCanvas();
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
