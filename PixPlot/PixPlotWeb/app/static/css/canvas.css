@@ -97,6 +97,7 @@ canvas {
     overflow-y: auto; 
     display: flex;
     flex-direction: column;
+    /* margin-bottom: 200px; */
 }
 
 .toolbar label {
@@ -198,7 +199,26 @@ canvas {
     background-color: #0056b3;
 }
 
+.toolbar-links {
+    display: flex;  
+}
 
+.toolbar-link {
+    margin: 0 15px; 
+    color: #007bff; 
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 4px;
+}
 
+.toolbar-link:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+}
 
+.toolbar-link:active {
+    color: #004080; 
+    background-color: #dee2e6; 
+}
 

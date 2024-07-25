@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas with Input Boxes and Grid Background</title>
+    <title>Home</title>
     <link rel="stylesheet" href="{% static 'css/canvas.css' %}">
 </head>
 
@@ -17,6 +17,10 @@
         
         <div class="toolbar">
             <!-- <button id="saveButton">Save</button> -->
+            <div class="toolbar-links">
+                <a href="{% url 'logout' %}" class="toolbar-link">Logout</a>
+                <a href="{% url 'about' %}" class="toolbar-link">About Us</a>
+            </div>
             <div class="line-style-select">
                 <label for="line-style">Line Style:</label>
                 <select id="line-style">
@@ -87,6 +91,7 @@
                 <div class="magnifying-glass"></div>
                 <button id="zoom-in" class="zoom-button">+</button>
             </div>
+            
         </div>
     </div>
     <script src="{% static 'js/canvas.js' %}"></script>
