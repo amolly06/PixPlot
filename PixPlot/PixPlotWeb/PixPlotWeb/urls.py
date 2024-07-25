@@ -18,23 +18,10 @@ Including another URLconf
 # PixPlotWeb/urls.py
 from django.contrib import admin
 from django.urls import path, include
-# from django.contrib.auth import views as auth_views
-from Users import views as user_views
-from Folders import views as folder_views
-# from DisplayStyles import views as display_views
-from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.intro, name='intro'),
-    path('about/', views.about, name='about'),
-    path('users/login/', user_views.login_request, name='account_login'),
-    path('users/register/', user_views.register_request, name='account_register'),
-    path('folders/home/', folder_views.home, name='home'),
-    path('mindmap/', views.mindmap, name='mindmap'),
-    # path('accounts/login/', auth_views.LoginView.as_view(template_name='login.html'), name='account_login'),
-
-
+    path('', include('app.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 

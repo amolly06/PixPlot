@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+    {% comment %} <link href="{% static 'css/tailwind.css' %}" rel="stylesheet"> {% endcomment %}
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-4xl font-bold">Infinite Canvas</h1>
+        <div id="canvas">Your infinite canvas implementation here...</div>
+        <a href="{% url 'logout' %}" class="btn btn-secondary mt-4">Logout</a>
+    </div>
+</body>
+</html>
