@@ -424,6 +424,29 @@ function createSaveButton() {
 createSaveButton();
 
 
+function collectCanvasData() {
+    const nodes = []; // Collect nodes and their properties
+
+    document.querySelectorAll('.node').forEach(nodeElement => {
+        const node = {
+            x: nodeElement.offsetLeft,
+            y: nodeElement.offsetTop,
+            width: nodeElement.offsetWidth,
+            height: nodeElement.offsetHeight,
+            color: nodeElement.style.backgroundColor,
+            fontSize: parseInt(window.getComputedStyle(nodeElement).fontSize),
+            fontStyle: window.getComputedStyle(nodeElement).fontFamily,
+            text: nodeElement.textContent,
+            borderColor: window.getComputedStyle(nodeElement).borderColor
+        };
+        nodes.push(node);
+    });
+
+    const canvasData = JSON.stringify({ nodes });
+    console.log('Collected Canvas Data:', canvasData); // Ensure canvasData is defined and logged
+
+    return canvasData;
+}
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -553,3 +576,5 @@ function getCookie(name) {
     return cookieValue;
 }
 
+console.log('Canvas Data:', canvasData);
+console.log('Nodes:', data.nodes);
