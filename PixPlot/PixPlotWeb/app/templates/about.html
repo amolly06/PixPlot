@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -242,10 +243,10 @@ footer {
 </head>
 <body>
     <div class="navbar">
-        <img src="Untitled_design__2_-removebg-preview.png" alt="PixPlot Logo"> 
+        <img src="{% static 'images/logo.png' %}" alt="PixPlot Logo"> 
         <div class="navbar-links">
-            <a href="pixplot/login.html">Login</a>
-            <a href="pixplot/signup.html">Signup</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'signup' %}">Signup</a>
         </div>
     </div>
     <main>
@@ -255,7 +256,7 @@ footer {
                     <h2>Our Mission</h2>
                     <p>We aim to empower users to organize their photos and ideas seamlessly through innovative mind mapping tools. Our mission is to enhance creativity and productivity by providing an intuitive platform for visualizing connections and structuring thoughts in an engaging and inclusive environment</p>
                 </div>
-                <img src="minnnn.jpeg" alt="Our Mission Image" class="mission-image">
+                <img src="{% static 'images/aboutmind.jpg' %}" alt="Our Mission Image" class="mission-image">
             </div>
         </section>
         <section class="team-section">
@@ -263,19 +264,19 @@ footer {
             <div class="team-members">
                 <div class="team-member">
                     <div class="member-info">
-                        <img src="ananyaphoto.jpg" alt="Team Member 1">
+                        <img src="{% static 'images/ananya.jpg' %}" alt="Team Member 1">
                         <h3>Ananya Kuchhal</h3>
                     </div>
                 </div>
                 <div class="team-member">
                     <div class="member-info">
-                        <img src="amolly.jpg" alt="Team Member 2">
+                        <img src="{% static 'images/amolly.jpg' %}" alt="Team Member 2">
                         <h3>Amolly Choudary</h3>
                     </div>
                 </div>
                 <div class="team-member">
                     <div class="member-info">
-                        <img src="hanika.jpg" alt="Team Member 3">
+                        <img src="{% static 'images/hanika.jpg' %}" alt="Team Member 3">
                         <h3>Kaithey Hanika Vasu</h3>
                     </div>
                 </div>
