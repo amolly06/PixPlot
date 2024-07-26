@@ -2,13 +2,289 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PixPlot_AboutUs</title>
-    {% comment %} <link href="{% static 'css/tailwind.css' %}" rel="stylesheet"> {% endcomment %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    margin: 0;
+    padding: 0;
+    /* background: linear-gradient(135deg, #edaadd, #f3c6e8); */
+    color: #333;
+}
+
+.navbar {
+    background: linear-gradient(135deg, rgba(90, 87, 170, 0.724), rgba(105, 91, 175, 0.6));
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.navbar img {
+    height: 40px; 
+    margin-right: 15px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 3rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 60px; /* Add margin-top to avoid content being hidden behind fixed navbar */
+}
+
+.about-section {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.mission-content {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 2rem;
+}
+
+.mission-image {
+    border-radius: 15px;
+    width: 40%;
+    max-width: 300px;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.mission-image:hover {
+    transform: scale(1.05);
+}
+
+.mission-text {
+    flex: 1;
+}
+
+.mission-text h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 3rem;
+    color: #004d99;
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.mission-text h2::after {
+    content: '';
+    width: 80%;
+    height: 6px;
+    background: linear-gradient(90deg, #004d99, #00aaff);
+    display: block;
+    margin: 0.5rem auto 0;
+    border-radius: 3px;
+    animation: slideIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        width: 0;
+        background: #004d99;
+    }
+    to {
+        width: 80%;
+        background: linear-gradient(90deg, #004d99, #00aaff);
+    }
+}
+
+.mission-text p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: #555;
+}
+
+.team-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.team-section h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 3rem;
+    color: #004d99;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.team-section h2::after {
+    content: '';
+    width: 80%;
+    height: 6px;
+    background: linear-gradient(90deg, #004d99, #00aaff);
+    display: block;
+    margin: 0.5rem auto 0;
+    border-radius: 3px;
+    animation: slideIn 1s ease-in-out;
+}
+
+.team-members {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.team-member {
+    background: linear-gradient(135deg, #ffcccc, #ffe6e6);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    padding: 2rem;
+    width: 280px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.team-member::before {
+    content: "";
+    position: absolute;
+    top: -75px;
+    left: -75px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: transform 0.5s ease;
+}
+
+.team-member:hover::before {
+    transform: scale(1.5);
+}
+
+.team-member:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.member-info {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.team-member img {
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.team-member:hover img {
+    transform: scale(1.1);
+}
+
+.team-member h3 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.5rem;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+footer {
+    background-color: #004d99;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+    </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-        <h1 class="text-4xl font-bold">About Us</h1>
-        <p>Information about PixPlot...</p>
+<body>
+    <div class="navbar">
+        <img src="Untitled_design__2_-removebg-preview.png" alt="PixPlot Logo"> 
+        <div class="navbar-links">
+            <a href="pixplot/login.html">Login</a>
+            <a href="pixplot/signup.html">Signup</a>
+        </div>
     </div>
+    <main>
+        <section class="about-section">
+            <div class="mission-content">
+                <div class="mission-text">
+                    <h2>Our Mission</h2>
+                    <p>We aim to empower users to organize their photos and ideas seamlessly through innovative mind mapping tools. Our mission is to enhance creativity and productivity by providing an intuitive platform for visualizing connections and structuring thoughts in an engaging and inclusive environment</p>
+                </div>
+                <img src="minnnn.jpeg" alt="Our Mission Image" class="mission-image">
+            </div>
+        </section>
+        <section class="team-section">
+            <h2>Meet the Team</h2>
+            <div class="team-members">
+                <div class="team-member">
+                    <div class="member-info">
+                        <img src="ananyaphoto.jpg" alt="Team Member 1">
+                        <h3>Ananya Kuchhal</h3>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-info">
+                        <img src="amolly.jpg" alt="Team Member 2">
+                        <h3>Amolly Choudary</h3>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-info">
+                        <img src="hanika.jpg" alt="Team Member 3">
+                        <h3>Kaithey Hanika Vasu</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024@PixPlot. All rights reserved.</p>
+    </footer>
 </body>
 </html>
+
