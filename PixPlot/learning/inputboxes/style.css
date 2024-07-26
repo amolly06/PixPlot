@@ -1,27 +1,27 @@
 .node-input {
     position: absolute;
-    width: 200px; /* Adjust to match default node width */
-    /* height: 50px; Adjust to match default node height */
+    width: 200px; 
     border: 2px solid rgb(220, 234, 245);
     border-radius: 10px;
-    background-color: rgb(220, 234, 245);
+    background-color: rgb(7, 45, 73);
     padding: 10px;
-    /* display: flex; */
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    /* box-sizing: border-box; */
 }
 
 .node-input button {
-    margin: 5px;
-    padding: 5px;
     border: none;
     border-radius: 5px;
-    background-color: #007BFF;
+    background-color: #142d47;
     color: white;
     cursor: pointer;
     font-size: 15px;
+    margin-right: 60%; 
+}
+
+.node-input button:last-child {
+    margin-right: 0;
 }
 
 .node-input button:hover {
@@ -138,7 +138,7 @@ canvas {
 
 .toolbar input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background: #007bff;
+    background: #102a45;
     height: 15px;
     width: 15px;
     border-radius: 50%;
@@ -197,6 +197,7 @@ canvas {
 .save-button:hover {
     background-color: #0056b3;
 }
+
 
 
 
