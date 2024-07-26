@@ -14,3 +14,4 @@ class CreateUserForm(UserCreationForm):
         if not email:
             raise forms.ValidationError('This field is required.')
         return email
+

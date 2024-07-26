@@ -38,21 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tailwind',
     'app',
-    'theme1',
-    'crispy_forms',
-    'crispy_tailwind',
     'rest_framework',
     'django_browser_reload',
 
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
-CRISPY_TEMPLATE_PACK = "tailwind"
-
-TAILWIND_APP_NAME = 'theme1'
-INTERNAL_IPS = ['127.0.0.1']
 
 NPM_BIN_PATH = '/home/amollychoudhary/.nvm/versions/node/v20.5.1/bin/npm'
 
