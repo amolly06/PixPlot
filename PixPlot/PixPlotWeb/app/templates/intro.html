@@ -1,15 +1,148 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PixPlot_Home</title>
-    {% comment %} <link href="{% static 'css/tailwind.css' %}" rel="stylesheet"> {% endcomment %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixPlot - Introduction</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: url('mindmap.png') no-repeat center center fixed;
+            background-size: cover;
+            /* color: #333; */
+            overflow: hidden;
+        }
+        .navbar {
+            background: rgba(237, 199, 183);
+            color: #ac3b61;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            margin-right: 70px;
+        }
+        .navbar img {
+            height: 60px; 
+            margin-right: 15px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            padding-right: 30px;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            flex-direction: row;
+            background-color: rgba(238, 226, 220, 0.4);
+        }
+        .intro-content {
+            border-radius: 15px;
+            transform: perspective(1000px) rotateX(5deg) rotateY(2deg);
+            transition: transform 0.3s ease;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* justify-content: space-between; */
+        }
+        .intro-text {
+            flex: 1;
+            margin-right: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        h1 {
+            margin-top: 0;
+            font-size: 3em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        p {
+            font-size: 1.5em;
+            margin: 20px 0;
+            line-height: 1.4;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #123c69;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn:hover {
+            background-color: #357abd;
+            transform: scale(1.05);
+        }
+        .footer {
+            background: rgba(237, 199, 183);
+            color: #123c69;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-        <h1 class="text-4xl font-bold">Welcome to PixPlot</h1>
-        <p class="mt-2">About the website...</p>
-        <a href="{% url 'login' %}" class="btn btn-primary mt-4">Get Started</a>
+<body>
+    <div class="navbar">
+        <img src="Untitled_design__2_-removebg-preview.png" alt="PixPlot Logo"> 
+        <div class="navbar-links">
+            <a href="pixplot/login.html" style="color: #ac3b61;">Login</a>
+            <a href="pixplot/signup.html" style="color: #ac3b61;">Signup</a>
+            <a href="pixplot/queries.html" style="color: #ac3b61;">About Us</a>
+        </div>
     </div>
+
+    <div class="container">
+        <div class="intro-content">
+            <div class="intro-text">
+                <h1>Welcome to PixPlot</h1>
+                <p style="color: #123c69;">Your interactive canvas for visualizing and managing nodes with dynamic features. Explore, create, and innovate with ease.</p>
+                <a href="D:\periodpal\PixPlot\canva.html" class="btn">Get Started</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 PixPlot. All rights reserved.</p>
+        <p>Email: support@pixplot.com | Phone: +1 (123) 456-7890</p>
+    </div>
+    <div class="animated-background"></div>
+    <div class="parallax" id="parallax"></div>
+
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const parallax = document.getElementById('parallax');
+            const x = e.clientX / window.innerWidth - 0.5;
+            const y = e.clientY / window.innerHeight - 0.5;
+            parallax.style.transform = `translate(-50%, -50%) translate3d(${x * 30}px, ${y * 30}px, 0)`;
+        });
+    </script>
 </body>
 </html>
+
