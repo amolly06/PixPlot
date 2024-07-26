@@ -36,7 +36,7 @@ function drawGrid() {
 }
 
 function redrawNodes() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, 6*canvas.width, canvas.height);
     ctx.save();
     ctx.setTransform(zoomLevel, 0, 0, zoomLevel, 0, 0);
     drawGrid();
@@ -139,11 +139,25 @@ function createInputBox(node) {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.className = 'file-input';
-    fileInput.accept = 'image/*,video/*';
+    fileInput.accept = 'image/,video/';
     fileInput.addEventListener('change', (e) => handleFileUpload(e, node.id));
 
     const preview = document.createElement('img');
     preview.className = 'preview';
+    preview.style.width= '115%';
+    preview.style.marginLeft= '-7%';
+    preview.style.borderRadius= '10px';
+    preview.style.boxShadow = '0px 0px 10px 0px #000000';
+    preview.style.transition = 'transform 0.5s';
+    preview.style.transform = 'scale(1)';
+    preview.addEventListener('mouseover', () => {
+        preview.style.transform = 'scale(1.1)';
+    });
+    preview.addEventListener('mouseout', () => {
+        preview.style.transform = 'scale(1)';
+    });
+
+
 
     const changeButton = document.createElement('button');
     changeButton.textContent = '+';
@@ -169,6 +183,21 @@ function handleFileUpload(event, nodeId) {
     const inputBox = document.getElementById(nodeId);
     const preview = inputBox.querySelector('.preview');
 
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+  }
+}
+
+
+function handleFileUpload(event, nodeId) {
+    const file = event.target.files[0];
+    const inputBox = document.getElementById(nodeId);
+    const preview = inputBox.querySelector('.preview');
     if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -402,7 +431,7 @@ function saveCanvas() {
         if (preview && preview.src) {
             const image = new Image();
             image.src = preview.src;
-            tempCtx.drawImage(image, node.x - node.width / 2, node.y - node.height / 2 + 45, node.width, node.height);
+            tempCtx.drawImage(image, node.x - node.width / 2 , node.y - node.height / 2 + 45, node.width, node.height);
         }
     });
 
@@ -423,158 +452,3 @@ function createSaveButton() {
 
 createSaveButton();
 
-
-function collectCanvasData() {
-    const nodes = []; // Collect nodes and their properties
-
-    document.querySelectorAll('.node').forEach(nodeElement => {
-        const node = {
-            x: nodeElement.offsetLeft,
-            y: nodeElement.offsetTop,
-            width: nodeElement.offsetWidth,
-            height: nodeElement.offsetHeight,
-            color: nodeElement.style.backgroundColor,
-            fontSize: parseInt(window.getComputedStyle(nodeElement).fontSize),
-            fontStyle: window.getComputedStyle(nodeElement).fontFamily,
-            text: nodeElement.textContent,
-            borderColor: window.getComputedStyle(nodeElement).borderColor
-        };
-        nodes.push(node);
-    });
-
-    const canvasData = JSON.stringify({ nodes });
-    console.log('Collected Canvas Data:', canvasData); // Ensure canvasData is defined and logged
-
-    return canvasData;
-}
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
-    const saveButton = document.getElementById('saveButton');
-    const loadButton = document.getElementById('loadButton');
-
-    // Set up your canvas dimensions if not set in HTML
-    canvas.width = 800; // example width
-    canvas.height = 600; // example height
-
-    // Fetch the canvas data from the server
-    async function loadCanvas() {
-        try {
-            const response = await fetch('/api/canvas/', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming token-based authentication
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to load canvas data.');
-            }
-
-            const data = await response.json();
-            if (data.canvas_data) {
-                applyCanvasData(data.canvas_data);
-            }
-        } catch (error) {
-            console.error('Error loading canvas:', error);
-        }
-    }
-
-    // Save the current canvas state to the server
-    async function saveCanvas() {
-        const canvasData = JSON.stringify(collectCanvasData());
-
-        try {
-            const response = await fetch('/api/canvas/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming token-based authentication
-                },
-                body: JSON.stringify({ canvas_data: canvasData })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to save canvas data.');
-            }
-
-            console.log('Canvas saved successfully!');
-        } catch (error) {
-            console.error('Error saving canvas:', error);
-        }
-    }
-
-    // Collect canvas data (nodes, positions, etc.)
-    function collectCanvasData() {
-        const nodes = []; // Collect nodes and their properties
-
-        // Example node data collection (customize as needed)
-        document.querySelectorAll('.node').forEach(nodeElement => {
-            const node = {
-                x: nodeElement.offsetLeft,
-                y: nodeElement.offsetTop,
-                width: nodeElement.offsetWidth,
-                height: nodeElement.offsetHeight,
-                color: nodeElement.style.backgroundColor,
-                fontSize: parseInt(window.getComputedStyle(nodeElement).fontSize),
-                fontStyle: window.getComputedStyle(nodeElement).fontFamily,
-                text: nodeElement.textContent,
-                borderColor: window.getComputedStyle(nodeElement).borderColor
-            };
-            nodes.push(node);
-        });
-
-        return {
-            nodes: nodes
-        };
-    }
-
-    // Apply canvas data (nodes, positions, etc.)
-    function applyCanvasData(canvasData) {
-        const data = JSON.parse(canvasData);
-        
-        // Example node data application (customize as needed)
-        data.nodes.forEach(node => {
-            const nodeElement = document.createElement('div');
-            nodeElement.className = 'node';
-            nodeElement.style.position = 'absolute';
-            nodeElement.style.left = `${node.x}px`;
-            nodeElement.style.top = `${node.y}px`;
-            nodeElement.style.width = `${node.width}px`;
-            nodeElement.style.height = `${node.height}px`;
-            nodeElement.style.backgroundColor = node.color;
-            nodeElement.style.fontSize = `${node.fontSize}px`;
-            nodeElement.style.fontFamily = node.fontStyle;
-            nodeElement.style.border = `1px solid ${node.borderColor}`;
-            nodeElement.textContent = node.text;
-
-            canvas.appendChild(nodeElement);
-        });
-    }
-
-    // Event listeners for save and load buttons
-    saveButton.addEventListener('click', saveCanvas);
-    loadButton.addEventListener('click', loadCanvas);
-
-    // Load canvas data when the page loads
-    loadCanvas();
-});
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-console.log('Canvas Data:', canvasData);
-console.log('Nodes:', data.nodes);
