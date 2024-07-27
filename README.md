@@ -9,8 +9,8 @@ Team Members :
 
 Project Description :
 
-This web application allows users to create and manipulate nodes on a dyanamic canvas. Each node can contain text and can be customized in various ways , including color, size , rotation and more , Users can connect nodes with lines making it ideal for visualisation or structures 
-
+This web application allows users to create and manipulate nodes on a dyanamic canvas. Each node contains text and photos/videos that can be customized in various ways , including color, size , rotation and more , Users can connect nodes with lines making it ideal for visualisation or structures. 
+This project helps you organise your media in creative ways.
 
 Features :
 
@@ -24,7 +24,6 @@ Features :
      ** Border style and color
      ** Text decoration
      ** Corner radius
-     ** Rotation angle
 3. Connect Nodes: Draw connections between nodes using curvy lines.
 4. Grid Background: Visual aid for positioning nodes.
 5. Dynamic Styling: Real-time updates to node properties.
