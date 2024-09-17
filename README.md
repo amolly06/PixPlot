@@ -1,18 +1,18 @@
-#SHECODES 
+# SHECODES 
 
-Project Name : PixPlot 
+## Project Name : PixPlot 
 
-Team Members :
+### Team Members :
 1. Amolly Choudary
 2. Ananya Kuchhal
 3. Kaithey Hanika Vasu 
 
-Project Description :
+### Project Description :
 
 This web application allows users to create and manipulate nodes on a dyanamic canvas. Each node contains text and photos/videos that can be customized in various ways , including color, size , rotation and more , Users can connect nodes with lines making it ideal for visualisation or structures. 
 This project helps you organise your media in creative ways.
 
-Features :
+### Features :
 
 1. Create Nodes: Add nodes by clicking on the canvas.
 2. Editable Node Properties:
@@ -29,8 +29,7 @@ Features :
 5. Dynamic Styling: Real-time updates to node properties.
 
 
-Tools and Technologies :
-
+### Tools and Technologies :
 1. HTML
 2. CSS
 3. JavaScript (Canvas API)
